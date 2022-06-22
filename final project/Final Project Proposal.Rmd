@@ -1,0 +1,20 @@
+---
+title: "QTM 151 - Final Project Proposal"
+author: "Anna Choi, Sophia Mei, and Dola Qiu"
+output: html_document
+---
+```{r}
+library(foreign)
+consumer_behavior <- read.xport("~/Desktop/QTM 151/CBQ_J.xpt")
+nutrient_intakes <- read.xport("~/Desktop/QTM 151/DR1TOT_J.xpt")
+```
+```{r}
+head(consumer_behavior, 3)
+```
+```{r}
+head(nutrient_intakes, 3)
+```
+
+  For the final project, our group selected the data set **National Health and Nutrition Examination Survey (NHANES)**, a program of population-based studies designed to evaluate the health and nutritional status of adults and children in the United States. Although NHANES is conducted annually by Centers for Disease Control and Prevention (CDC), our final project will center around the NHANES data from 2017 to 2018, which is the most up-to-date data available on the official website. We made a decision to narrow down the scope of our project because the NHANES data from 2017 to 2020 were found to be incomplete and not nationally representative due to the pandemic. We want to make sure that the conclusion we make in the end is relevant to today's context.
+  
+  Using the NHANES 2017-2018 data set, we would like to explore the question of how consumer behavior their diet quality and nutritional adequacy. The data set includes demographics data, dietary data, examination data, laboratory data, questionnaire data, and limited access data. Among these different categories of data, we will utilize the Consumer Behavior questionnaire section to answer the question. Specifically, the variables CBD121 (money spent on eating out) and CBD131 (money spent on carryout/delivered foods) from questionnaire data would be used together with dietary data, which comprises daily total energy and nutrient intakes of individuals, to explore the relationship between consumer behavior of eating out and diet quality as well as nutritional adequacy. For example, if spending more money on eating out may be associated with having low diet quality and nutritional deficiency (ex. not enough vitamin), then a meaningful, insightful conclusion is very likely to be made. Since the data set was collected in the pre-pandemic period, our project would highlight the need for further investigation on the possible link between the changes in consumer behavior driven by the pandemic outbreak and individuals' health and nutritional status.

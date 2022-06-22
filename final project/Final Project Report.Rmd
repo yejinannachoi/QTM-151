@@ -1,0 +1,172 @@
+---
+title: "QTM 151 - Final Project Report"
+author: "Dola Qiu, Anna Choi, Sophia Mei"
+output: html_document
+---
+
+## Set Up
+```{r}
+# import data frames from external data files on NHANES website
+library(tidyverse)
+library(foreign)
+consumer_behavior <- read.xport("~/Desktop/QTM 151/CBQ_J.xpt")
+nutrient_intakes <- read.xport("~/Desktop/QTM 151/DR1TOT_J.xpt")
+
+# select columns SEQN, CBD121, and CBD131 from consumer_behavior data frame
+consumer_behavior <- select(consumer_behavior, SEQN, CBD121, CBD131)
+
+# select columns SEQN, DR1TIRON, DR1_320Z, DR1TVC, DR1TTFAT, DR1TPROT, and DR1TCARB from nutrient_intakes data frame
+nutrient_intakes <- select(nutrient_intakes, SEQN, DR1TIRON, DR1_320Z, DR1TVC, DR1TTFAT, DR1TPROT, DR1TCARB)
+
+# merge data frames consumer_behavior and nutrient_intakes by SEQN
+nhanes_1718 <- full_join(consumer_behavior, nutrient_intakes, by = "SEQN")
+
+# remove values that correspond to "Don't know" and "Refused"
+nhanes_1718 <- filter(nhanes_1718, CBD121 != 999999 & CBD121 != 777777)
+nhanes_1718 <- filter(nhanes_1718, CBD131 != 999999 & CBD131 != 777777)
+```
+
+## Fat
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total fat intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1TTFAT)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 78, color = "red") + # recommended daily fat intake for 3.14 persons (average US family size in 2017-2018)
+  ggtitle("Money Spent on Eating Out vs. Total Daily Fat Intake") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Fat Intake (gm)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total fat intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1TTFAT)) +
+  geom_point() +
+  geom_smooth() + 
+  geom_hline(yintercept = 78, color = "red") + # recommended daily fat intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Fat Intake") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Fat Intake (gm)")
+```
+
+## Vitamin C
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total vitamin c intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1TVC)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 90, color = "red") + # recommended daily vitamin c intake developed by FDA
+  ggtitle("Money Spent on Eating Out vs. Total Daily Vitamin C Intake") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Vitamin C Intake (mg)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total vitamin c intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1TVC)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 90, color = "red") + # recommended daily vitamin c intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Vitamin C Intake") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Vitamin C Intake (mg)")
+```
+
+## Iron
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total iron intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1TIRON)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 18, color = "red") + # recommended daily iron intake developed by FDA
+  ggtitle("Money Spent on Eating Out vs. Total Daily Iron Intake") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Iron Intake (mg)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total iron intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1TIRON)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 18, color = "red") + # recommended daily iron intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Iron Intake") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Iron Intake (mg)")
+```
+
+## Water
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total plain water drank for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1_320Z)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 2000, color = "red") + # recommended daily water intake developed by FDA
+  ggtitle("Money Spent on Eating Out vs. Total Daily Plain Water Drank") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Plain Water Drank (gm)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total plain water drank for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1_320Z)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 2000, color = "red") + # recommended daily water intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Plain Water Drank") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Plain Water Drank (gm)")
+```
+
+## Protein
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total protein intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1TPROT)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 50, color = "red") + # recommended daily protein intake developed by FDA
+  ggtitle("Money Spent on Eating Out vs. Total Daily Protein Intake") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Protein Intake (gm)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total protein intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1TPROT)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 50, color = "red") + # recommended daily protein intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Protein Intake") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Protein Intake (gm)")
+```
+
+## Carbohydrates
+```{r}
+# produce a scatter plot that shows the relationship between money spent on eating out and total carbohydrate intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD121, y = DR1TCARB)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 275, color = "red") + # recommended daily carbohydrate intake developed by FDA
+  ggtitle("Money Spent on Eating Out vs. Total Daily Carbohydrate Intake") +
+  labs(x = "Money Spent on Eating Out (USD/30 days)", y = "Total Daily Carbohydrate Intake (gm)")
+```
+```{r}
+# produce a scatter plot that shows the relationship between money spent on carryout/delivered foods and total carbohydrate intake for day 1
+nhanes_1718 %>%
+  drop_na %>% # remove missing values
+  ggplot(aes(x = CBD131, y = DR1TCARB)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 275, color = "red") + # recommended daily carbohydrate intake developed by FDA
+  ggtitle("Money Spent on Carryout/Delivered Foods vs. Total Daily Carbohydrate Intake") +
+  labs(x = "Money Spent on Carryout/Delivered Foods (USD/30 days)", y = "Total Daily Carbohydrate Intake (gm)")
+```
+
