@@ -1,0 +1,33 @@
+---
+title: "Homework 4 - maps"
+author: "Anna Choi - 2452634"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(maps)
+library(ggmap)
+```
+
+
+**Q1**: (10 points) For the dataset `flu`, make a map to show the distribution of the peak number of flu cases at each state in one year of your choice.
+
+
+```{r}
+flu <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/flu.csv')
+head(flu, 2)
+
+states <- map_data("state")
+flu <- left_join(flu, states, by = "region")
+
+flu %>%
+  filter(year.Date. == 2010) %>%
+  ggplot(aes(long, lat, fill = peak, group = group)) + 
+  geom_polygon(color = NA) + 
+  coord_fixed(1.3) +
+  scale_fill_gradient(high = "red", low = "white") +
+  ggtitle("2010 Flu Distribution in the United States") +
+  labs(x = "Longitude", y = "Latitude", fill = "Peak Number of Flu Cases")
+```

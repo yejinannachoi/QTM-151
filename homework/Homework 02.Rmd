@@ -1,0 +1,58 @@
+---
+title: "Homework 2 - qplot"
+author: "Anna Choi"
+output: html_document
+---
+
+Please use `qplot` instead of `ggplot`.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+data(diamonds)
+library(plotly)
+library(gapminder)
+set.seed(123)
+```
+
+**Q1**: (2 points) Make a small random subset of diamonds and name it as `dsmall`. You can use the function `sample` or any other function of your choice.
+
+```{r}
+dsmall <- diamonds[sample(1:nrow(diamonds), 100, replace = FALSE),]
+```
+
+**Q2**: (2 points) Show the distribution of carat with a histogram, set binwidth to 0.1 and limits for the x-axis from 0
+to 3.
+
+```{r}
+qplot(carat, geom = "histogram", data = diamonds,
+      binwidth = 0.1, xlim = c(0, 3))
+
+# The histogram is skewed to the right.
+```
+
+**Q3**: (2 points) Show the distribution of carat with a *density plot*, set the color to the variable `color`.
+
+```{r}
+qplot(carat, geom = "density", data = diamonds,
+      color = color)
+```
+
+**Q4**: (2 points) Produce a scatter-plot showing the relationship between *carat* and *price*, set point shape to the
+variable cut, set point transparency to 0.1, and describe the trend of the scatter-plot.
+
+```{r}
+qplot(diamonds$carat, diamonds$price, geom = "point",
+      shape = diamonds$cut, alpha = I(0.1))
+
+# There is a positive, non-linear association between the two variables carat and price. The price tends to increase as the carat increases, and the points do not cluster along a straight line. There appear to be some potential outliers in the subset of data. 
+```
+
+**Q5**: (2 points) Make another scatter-plot between *carat* and *price*, add jitters to points, set point transparency to 0.1, apply log transformation to the x and y axes variables, and add a smooth line to the plot, then describe the trend of the scatter-plot.
+
+```{r}
+qplot(diamonds$carat, diamonds$price, geom = c("point", "smooth", "jitter"),
+      shape = diamonds$cut, alpha = I(0.1), aes(log(diamonds$carat), log(diamonds$price)))
+
+# There is a positive, linear association between the two variables carat and price. The price tends to increase as the carat increases, and the points cluster along a straight line. 
+```

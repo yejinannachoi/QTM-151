@@ -1,0 +1,65 @@
+---
+title: "Homework 3 - plot_ly"
+author: "Anna Choi - 2452634"
+output: html_document
+---
+
+For the `ggplotly` plots, you may use either `qplot` or `ggplot` as the base plot command.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+data(diamonds)
+library(plotly)
+library(gapminder)
+set.seed(123)
+```
+
+**Q1**: (3 points) For the data `gapminder`, make a scatter-plot between `pop` and `lifeExp` at the year 2007, set color to the continent, mark the country names to the max and min of lifeExp.
+
+```{r}
+gapminder_2007 <- filter(gapminder, year == 2007)
+
+plot_ly(gapminder_2007, x = ~pop, y = ~lifeExp, text = ~country, type = 'scatter', color = ~continent) %>%
+  add_annotations(
+    x = gapminder_2007$pop[which.max(gapminder_2007$lifeExp)],
+    y = gapminder_2007$lifeExp[which.max(gapminder_2007$lifeExp)],
+    text = "Japan") %>%
+  add_annotations(
+    x = gapminder_2007$pop[which.min(gapminder_2007$lifeExp)],
+    y = gapminder_2007$lifeExp[which.min(gapminder_2007$lifeExp)],
+    text = "Swaziland")
+```
+
+
+**Q2**: (3 points) For the data `gapminder`, make a `plotly` graph between `gapPercap` and `lifeExp`, set the color to the variable continent, size to the population, add linear smooth lines to different continents, show them at each year by animation (set frame to the `year`).
+
+```{r}
+gapminder_ggplot <- ggplot(gapminder, aes(gdpPercap, lifeExp)) +
+  geom_point(aes(color = continent, size = pop, frame = year)) +
+  geom_smooth(aes(col = factor(continent)), method = "lm", se = F) +
+  scale_x_log10()
+
+ggplotly(gapminder_ggplot)
+```
+
+**Q3**: (4 points) For the data `txhousing`, make a line graph to show monthly median house price among all Texan cities, choose your two favorite cities, and add two lines to highlight these two cities. Moreover, add two lines for the same graph to show the maximum and minimum monthly median house prices among all Texan cities by date.
+
+```{r}
+# Find the maximum monthly median house price among all Texan cities
+txhousing[which.max(txhousing$median),]
+# Find the minimum monthly median house price among all Texan cities
+txhousing[which.min(txhousing$median),]
+
+txhousing_median <- txhousing %>%
+  group_by(city) %>% 
+  plot_ly(x = ~date, y = ~median) %>%
+  add_lines(name = "All Texan Cities", alpha = I(0.2)) %>%
+  add_lines(name = "Austin", data = filter(txhousing, city == "Austin")) %>%
+  add_lines(name = "Dallas", data = filter(txhousing, city == "Dallas")) %>%
+  add_lines(name = "Maximum Monthly Median Price", data = filter(txhousing, city == "Collin County" | median == 304200)) %>%
+  add_lines(name = "Minimum Monthly Median Price", data = filter(txhousing, city == "Harlingen" | median == 50000))
+
+txhousing_median
+```
+
